@@ -161,7 +161,8 @@
   .kpi .value.pos { color: var(--green); }
   .kpi .value.neg { color: var(--red); }
 
-  table.data { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 15.5px; }
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 8px; }
+  table.data { width: 100%; border-collapse: collapse; font-size: 15.5px; min-width: 460px; }
   table.data th {
     text-align: left; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase;
     color: var(--sub); font-weight: 700; padding: 12px 10px; border-bottom: 2px solid var(--ink);
@@ -254,6 +255,7 @@
   <div class="wrap">
     <div class="tag"><span class="no">02</span><span class="label">Key Metrics</span></div>
     <h2>主要指標（12店舗の集計値）</h2>
+    <div class="table-scroll">
     <table class="data">
       <tr><th>指標</th><th>平均</th><th>中央値</th><th>最小</th><th>最大</th></tr>
       <tr><td class="label">全体アクセス人数</td><td>139,340</td><td>102,095</td><td>26,844</td><td>513,875</td></tr>
@@ -261,6 +263,7 @@
       <tr><td class="label">商品ページ 前年比（%）</td><td>-7.62</td><td>-4.30</td><td>-54.37</td><td>+24.54</td></tr>
       <tr><td class="label">商品レビュー 前年比（%）</td><td>+4.54</td><td>+9.60</td><td>-31.13</td><td>+31.59</td></tr>
     </table>
+    </div>
     <p class="note">
       ※前年比の比較対象期間（2025年の同一期間の具体的な日付範囲）はRMSの出力データ上には明記されていません。2026/07/01は水曜日、2025/07/01は火曜日と暦日ベースでは曜日が1日ずれるため、比較期間内の曜日構成（平日・週末の日数）が年によって異なっている可能性があります。EC訪問は曜日により波があるため、前年比の数値には曜日のズレによる影響が多少含まれている可能性がある点にご留意ください。
     </p>
@@ -303,6 +306,10 @@
 
 </svg>
     <p>12店舗中5店舗がプラス（+10.5%〜+26.0%）、7店舗がマイナス（-1.6%〜-52.6%）という二極化が見られます。特にマイナス幅の大きい3店舗（-36%〜-53%）が全体平均を押し下げている形で、中央値で見ればマイナス幅は平均より小さくなります。</p>
+    <p>なお、最も大きく落ち込んだ店舗（-52.6%）については、前年同期に外部からの大量アクセス（突出した流入で、異常値とも思われる）があった反動によるものです。そのため今回はアクセス数が大きく減少していますが、売上自体はプラスで推移しており、アクセスの減少がそのまま売上の落ち込みを意味しているわけではありません。</p>
+    <div class="callout">
+      結論として、アクセスだけでは売上の伸びに直結していない部分が見受けられます。アクセスが減っても売上が伸びている店舗がある一方、アクセス増が必ずしも購入（転換）に結びついていないケースもあり、アクセス指標は売上とは切り分けて評価する必要があります。
+    </div>
   </div>
 </section>
 
