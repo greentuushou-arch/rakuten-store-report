@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>楽天市場 店舗運営分析レポート ｜ 2026年7月前半</title>
+<style>
+  :root {
+    --ink: #14161f;
+    --sub: #5b5f6d;
+    --line: #e6e7ec;
+    --card: #ffffff;
+    --bg: #f6f6f8;
+    --accent: #ff4d3d;
+    --accent-dark: #14161f;
+    --green: #16a34a;
+    --red: #dc2626;
+    --mono: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.9;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 32px; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    background: var(--accent-dark);
+    color: #fff;
+    padding: 120px 0 90px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    right: -120px; top: -160px;
+    width: 480px; height: 480px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ff4d3d55, transparent 70%);
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    font-weight: 700;
+    border: 1px solid #ffffff33;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-size: clamp(40px, 6vw, 68px);
+    font-weight: 900;
+    line-height: 1.25;
+    margin: 0 0 20px;
+    letter-spacing: -0.02em;
+  }
+  .hero p.lead {
+    font-size: 19px;
+    color: #c7c9d6;
+    max-width: 620px;
+    margin: 0;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: #ffffff22;
+    margin-top: 64px;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .hero-stat {
+    background: #1c1f2b;
+    padding: 26px 24px;
+  }
+  .hero-stat .num {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+  .hero-stat .num.pos { color: #4ade80; }
+  .hero-stat .num.neg { color: #f87171; }
+  .hero-stat .cap {
+    font-size: 13px;
+    color: #9599aa;
+    margin-top: 6px;
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section { padding: 88px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type { border-bottom: none; }
+  .tag {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .tag .no {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    background: #ff4d3d14;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .tag .label {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--sub);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  h2 {
+    font-size: clamp(28px, 4vw, 38px);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    margin: 0 0 28px;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 36px 0 14px;
+  }
+  p { color: #2b2d38; margin: 0 0 18px; }
+  p.muted { color: var(--sub); font-size: 15.5px; }
+  .lead-text { font-size: 19px; color: #1c1e28; max-width: 760px; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 32px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; align-items: center; }
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .kpi {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px 22px 20px;
+  }
+  .kpi .label { font-size: 13px; color: var(--sub); font-weight: 700; margin-bottom: 10px; }
+  .kpi .value { font-size: 30px; font-weight: 900; letter-spacing: -0.01em; }
+  .kpi .sub { font-size: 13px; color: var(--sub); margin-top: 6px; }
+  .kpi .value.pos { color: var(--green); }
+  .kpi .value.neg { color: var(--red); }
+
+  table.data { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 15.5px; }
+  table.data th {
+    text-align: left; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--sub); font-weight: 700; padding: 12px 10px; border-bottom: 2px solid var(--ink);
+  }
+  table.data td { padding: 14px 10px; border-bottom: 1px solid var(--line); font-weight: 500; }
+  table.data td.label { font-weight: 700; }
+  table.data tr:last-child td { border-bottom: none; }
+
+  .chart-svg { width: 100%; height: auto; display: block; }
+  .bar-val, .axis-label { font-size: 12px; fill: var(--sub); font-family: inherit; }
+  .bar-val-lg { font-size: 20px; font-weight: 900; fill: var(--ink); font-family: inherit; }
+  .axis-zero { stroke: #cfd1da; stroke-width: 1.5; }
+  .axis-avg { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 6 5; }
+  .avg-label { font-size: 13px; fill: var(--accent); font-weight: 700; font-family: inherit; }
+
+  .donut-wrap { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+  .donut-svg { width: 200px; height: 200px; flex-shrink: 0; }
+  .donut-center-big { font-size: 26px; font-weight: 900; fill: var(--ink); }
+  .donut-center-small { font-size: 12px; fill: var(--sub); }
+  .legend { display: flex; flex-direction: column; gap: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; }
+  .swatch { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+
+  .callout {
+    border-left: 4px solid var(--accent);
+    background: #ff4d3d0d;
+    padding: 20px 24px;
+    border-radius: 0 12px 12px 0;
+    margin: 24px 0;
+    font-size: 16px;
+  }
+  .note {
+    font-size: 14px;
+    color: var(--sub);
+    background: #f0f0f3;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 18px;
+  }
+  .sources { font-size: 13px; color: var(--sub); margin-top: 20px; }
+  .sources a { color: var(--sub); }
+
+  .caveat-list { display: grid; gap: 14px; margin-top: 8px; }
+  .caveat {
+    display: grid; grid-template-columns: 28px 1fr; gap: 14px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px;
+  }
+  .caveat .icon { font-size: 18px; }
+
+  footer {
+    padding: 48px 0 80px;
+    text-align: center;
+    color: var(--sub);
+    font-size: 13px;
+  }
+
+  @media (max-width: 720px) {
+    .hero { padding: 80px 0 60px; }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    body { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow">STORE PERFORMANCE REPORT — JULY 2026</span>
+    <h1>楽天市場<br>店舗運営分析レポート</h1>
+    <p class="lead">2026年7月前半（7/1–7/13）の実績を、運営する上位12店舗（複数ジャンル）で匿名集計。店舗名は一切開示せず、全体傾向のみをまとめています。</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">12</div><div class="cap">対象店舗数</div></div>
+      <div class="hero-stat"><div class="num neg">-4.5%</div><div class="cap">前年比 平均</div></div>
+      <div class="hero-stat"><div class="num">5 / 7</div><div class="cap">プラス / マイナス店舗数</div></div>
+      <div class="hero-stat"><div class="num">91.9%</div><div class="cap">商品ページが占める割合</div></div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="tag"><span class="no">01</span><span class="label">Summary</span></div>
+    <h2>店舗間で、明暗がくっきり分かれた前半戦。</h2>
+    <p class="lead-text">12店舗合計のアクセス人数は約167万人（13日間）、店舗あたり平均は約13.9万人。前年同期比では12店舗中5店舗がプラス、7店舗がマイナスとなり、平均だけでは語れない振れ幅の大きさが今回のデータの特徴です。</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="tag"><span class="no">02</span><span class="label">Key Metrics</span></div>
+    <h2>主要指標（12店舗の集計値）</h2>
+    <table class="data">
+      <tr><th>指標</th><th>平均</th><th>中央値</th><th>最小</th><th>最大</th></tr>
+      <tr><td class="label">全体アクセス人数</td><td>139,340</td><td>102,095</td><td>26,844</td><td>513,875</td></tr>
+      <tr><td class="label">全体 前年比（%）</td><td>-4.51</td><td>-1.90</td><td>-52.64</td><td>+26.02</td></tr>
+      <tr><td class="label">商品ページ 前年比（%）</td><td>-7.62</td><td>-4.30</td><td>-54.37</td><td>+24.54</td></tr>
+      <tr><td class="label">商品レビュー 前年比（%）</td><td>+4.54</td><td>+9.60</td><td>-31.13</td><td>+31.59</td></tr>
+    </table>
+    <p class="note">
+      ※前年比の比較対象期間（2025年の同一期間の具体的な日付範囲）はRMSの出力データ上には明記されていません。2026/07/01は水曜日、2025/07/01は火曜日と暦日ベースでは曜日が1日ずれるため、比較期間内の曜日構成（平日・週末の日数）が年によって異なっている可能性があります。EC訪問は曜日により波があるため、前年比の数値には曜日のズレによる影響が多少含まれている可能性がある点にご留意ください。
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="tag"><span class="no">03</span><span class="label">Distribution</span></div>
+    <h2>前年比の分布（店舗別・匿名）</h2>
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" class="chart-svg" role="img" aria-label="12店舗の前年比分布">
+  <line x1="40" y1="116.7" x2="740" y2="116.7" class="axis-zero"/>
+  <line x1="40" y1="131.2" x2="740" y2="131.2" class="axis-avg"/>
+  <rect x="40" y="137.2" width="146" height="20" rx="4" fill="#ffffff"/>
+  <text x="46" y="152.2" text-anchor="start" class="avg-label">12店舗平均 -4.5%</text>
+  <rect x="40.0" y="32.8" width="49.2" height="83.8" rx="4" fill="#16a34a"/>
+<text x="64.6" y="24.8" text-anchor="middle" class="bar-val">+26.0</text>
+<rect x="99.2" y="37.0" width="49.2" height="79.6" rx="4" fill="#16a34a"/>
+<text x="123.7" y="29.0" text-anchor="middle" class="bar-val">+24.7</text>
+<rect x="158.3" y="43.9" width="49.2" height="72.7" rx="4" fill="#16a34a"/>
+<text x="182.9" y="35.9" text-anchor="middle" class="bar-val">+22.6</text>
+<rect x="217.5" y="46.9" width="49.2" height="69.8" rx="4" fill="#16a34a"/>
+<text x="242.1" y="38.9" text-anchor="middle" class="bar-val">+21.7</text>
+<rect x="276.7" y="82.8" width="49.2" height="33.8" rx="4" fill="#16a34a"/>
+<text x="301.2" y="74.8" text-anchor="middle" class="bar-val">+10.5</text>
+<rect x="335.8" y="116.7" width="49.2" height="5.1" rx="4" fill="#dc2626"/>
+<text x="360.4" y="139.8" text-anchor="middle" class="bar-val">-1.6</text>
+<rect x="395.0" y="116.7" width="49.2" height="7.2" rx="4" fill="#dc2626"/>
+<text x="419.6" y="141.8" text-anchor="middle" class="bar-val">-2.2</text>
+<rect x="454.2" y="116.7" width="49.2" height="45.9" rx="4" fill="#dc2626"/>
+<text x="478.7" y="180.6" text-anchor="middle" class="bar-val">-14.2</text>
+<rect x="513.3" y="116.7" width="49.2" height="50.6" rx="4" fill="#dc2626"/>
+<text x="537.9" y="185.3" text-anchor="middle" class="bar-val">-15.7</text>
+<rect x="572.5" y="116.7" width="49.2" height="116.4" rx="4" fill="#dc2626"/>
+<text x="597.1" y="251.0" text-anchor="middle" class="bar-val">-36.1</text>
+<rect x="631.7" y="116.7" width="49.2" height="119.5" rx="4" fill="#dc2626"/>
+<text x="656.2" y="254.2" text-anchor="middle" class="bar-val">-37.1</text>
+<rect x="690.8" y="116.7" width="49.2" height="169.6" rx="4" fill="#dc2626"/>
+<text x="715.4" y="304.3" text-anchor="middle" class="bar-val">-52.6</text>
+
+</svg>
+    <p>12店舗中5店舗がプラス（+10.5%〜+26.0%）、7店舗がマイナス（-1.6%〜-52.6%）という二極化が見られます。特にマイナス幅の大きい3店舗（-36%〜-53%）が全体平均を押し下げている形で、中央値で見ればマイナス幅は平均より小さくなります。</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="tag"><span class="no">04</span><span class="label">Channel Trends</span></div>
+    <h2>チャネル別の動向</h2>
+    <div class="grid-2">
+      <div>
+        <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg" class="chart-svg" role="img" aria-label="チャネル別前年比">
+  <line x1="30" y1="134.5" x2="530" y2="134.5" class="axis-zero"/>
+  <rect x="30.0" y="60.3" width="126.7" height="74.3" rx="6" fill="#16a34a"/>
+<text x="93.3" y="50.3" text-anchor="middle" class="bar-val-lg">+17.8%</text>
+<text x="93.3" y="288" text-anchor="middle" class="axis-label">PC</text>
+<rect x="216.7" y="123.5" width="126.7" height="11.1" rx="6" fill="#16a34a"/>
+<text x="280.0" y="113.5" text-anchor="middle" class="bar-val-lg">+2.6%</text>
+<text x="280.0" y="288" text-anchor="middle" class="axis-label">アプリ</text>
+<rect x="403.3" y="134.5" width="126.7" height="96.5" rx="6" fill="#dc2626"/>
+<text x="466.7" y="253.0" text-anchor="middle" class="bar-val-lg">-23.1%</text>
+<text x="466.7" y="288" text-anchor="middle" class="axis-label">スマホ(ブラウザ)</text>
+
+</svg>
+      </div>
+      <div class="card">
+        <div class="kpi" style="border:none; padding:0;">
+          <div class="label">最も好調なチャネル</div>
+          <div class="value pos">PC +17.8%</div>
+          <div class="sub">12店舗中8店舗がプラス</div>
+        </div>
+        <hr style="border:none; border-top:1px solid var(--line); margin:20px 0;">
+        <div class="kpi" style="border:none; padding:0;">
+          <div class="label">最も落ち込んだチャネル</div>
+          <div class="value neg">スマホ -23.1%</div>
+          <div class="sub">プラスはわずか3店舗</div>
+        </div>
+      </div>
+    </div>
+    <p>PCが伸びてスマホが落ちるという傾向は12店舗中の多くに共通しており、特定の店舗だけの問題ではなく、スマホ経由の集客導線に構造的な変化が起きている可能性があります。</p>
+
+    <div class="callout">
+      背景の一つとして考えられるのが、外部（検索エンジンやSNSなど）からのアクセス時に、モバイルブラウザではなく楽天市場アプリがすぐに立ち上がるよう誘導する設定が、ここ最近強化されている点です。この誘導により、本来スマートフォンのブラウザ経由としてカウントされていたアクセスの一部が、アプリ未インストールなどの理由でそのまま離脱し、スマートフォン・アプリのどちらの数値にも十分に反映されていない可能性があります。実際、今回のデータでもスマートフォン（ブラウザ）が前年比-23.1%と大きく落ち込む一方、アプリは+2.7%とほぼ横ばいにとどまっており、アクセスが「スマホからアプリへそのまま移った」というより、誘導の過程で一部のアクセスが計測から抜け落ちている可能性も否定できません。この点は店舗側のアプリ誘導設定の変更時期と、スマホ経由アクセスの落ち込み時期が一致するかを見ることで、より精度高く検証できます。
+    </div>
+
+    <h3>デバイス構成比（平均）</h3>
+    <div class="donut-wrap">
+      <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" class="donut-svg" role="img" aria-label="デバイス構成比">
+  <circle cx="110" cy="110" r="80" fill="none" stroke="#3b82f6" stroke-width="34" stroke-dasharray="103.04 399.61" stroke-dashoffset="0.00" transform="rotate(-90 110 110)"/><circle cx="110" cy="110" r="80" fill="none" stroke="#f97316" stroke-width="34" stroke-dasharray="284.50 218.15" stroke-dashoffset="-103.04" transform="rotate(-90 110 110)"/><circle cx="110" cy="110" r="80" fill="none" stroke="#22c55e" stroke-width="34" stroke-dasharray="115.11 387.55" stroke-dashoffset="-387.55" transform="rotate(-90 110 110)"/>
+  <text x="110" y="104" text-anchor="middle" class="donut-center-big">56.6%</text>
+  <text x="110" y="126" text-anchor="middle" class="donut-center-small">アプリ</text>
+</svg>
+      <div class="legend">
+        <div class="legend-item"><span class="swatch" style="background:#f97316"></span>アプリ　56.6%</div>
+        <div class="legend-item"><span class="swatch" style="background:#22c55e"></span>スマートフォン　22.9%</div>
+        <div class="legend-item"><span class="swatch" style="background:#3b82f6"></span>PC　20.5%</div>
+      </div>
+    </div>
+    <p class="muted">ただし店舗によりPC比率は5.1%〜40.7%まで幅があり、客層・流入経路の違いが大きい点には留意が必要です。</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="tag"><span class="no">05</span><span class="label">Product Pages</span></div>
+    <h2>商品ページの重要性</h2>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">商品ページが占める割合（平均）</div><div class="value">91.9%</div><div class="sub">店舗により 81.3%〜98.3%</div></div>
+      <div class="kpi"><div class="label">商品ページ 前年比（平均）</div><div class="value neg">-7.62%</div><div class="sub">店舗全体の前年比とほぼ連動</div></div>
+    </div>
+    <p style="margin-top:24px;">店舗全体の前年比は商品ページの前年比とほぼ連動しており、商品ページへの集客（検索順位・SEO・レコメンド露出など）が各店舗の数字を左右する最大の要因であることが確認できます。</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="tag"><span class="no">06</span><span class="label">Market Context</span></div>
+    <h2>楽天市場全体の動きとの関係（参考情報）</h2>
+    <p>楽天グループの公表資料によれば、2025年度の国内EC流通総額は前年比+3.9%、2026年1-3月期も+4.8%と、モール全体としては引き続き緩やかな成長が続いています。今回の12店舗の傾向だけを見て「楽天市場全体が落ち込んでいる」とは言えません。</p>
+    <p>一方で楽天は2026年7月7日、検索型ECから「対話型EC」への移行を発表し、アプリ内のAIコンシェルジュに商品比較機能を追加しました。楽天側からは、この対話型機能の転換率（CVR）は現時点ではまだ高くないという声も聞かれますが、機能自体の目新しさや露出強化によって、購入には直結しなくてもアクセス自体は増えている可能性があります。今回のデータはアクセス人数のみを対象としており、こうした「転換には至らないアクセス増」がある場合、数値上はプラスに見えても実際の売上効果は別途確認が必要です。また前述の通り、外部からのアクセスをアプリへ強制的に誘導する設定強化も並行して進んでおり、こうしたアプリ中心の導線変化が、今回見られたチャネル間の乖離（PC好調・スマホブラウザ不調）に影響している可能性があります。</p>
+    <p class="sources">
+      出典：
+      <a href="https://www.nikkei.com/article/DGXZQOUC077660X00C26A7000000/" target="_blank" rel="noopener">日本経済新聞「楽天市場、AI検索サービスに新機能」（2026年7月）</a>／
+      <a href="https://netshop.impress.co.jp/e/2026/02/13/15586" target="_blank" rel="noopener">ネットショップ担当者フォーラム「楽天グループの2025年国内ECまとめ」</a>／
+      <a href="https://news.yahoo.co.jp/articles/15d22c12be55f84f5da1e18a258caa4f5e67ae5a" target="_blank" rel="noopener">Yahoo!ニュース「楽天の2026年1-3月期（1Q）の流通総額」</a>
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="tag"><span class="no">07</span><span class="label">Caveats</span></div>
+    <h2>留意点</h2>
+    <div class="caveat-list">
+      <div class="caveat"><div class="icon">🏬</div><div>本レポートは運営する上位12店舗（複数ジャンル）のデータに基づく集計であり、楽天市場全体を統計的に代表するものではありません。</div></div>
+      <div class="caveat"><div class="icon">📅</div><div>前年比の比較期間には曜日のズレが含まれる可能性があります。</div></div>
+      <div class="caveat"><div class="icon">🤖</div><div>AIコンシェルジュやアプリ誘導強化の影響については、現時点では仮説の域を出ません。</div></div>
+      <div class="caveat"><div class="icon">📍</div><div>自店舗の数値がこの平均・分布のどこに位置するかを、一つの目安としてご活用ください。</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  作成：2026年7月　対象期間：2026/07/01–07/13　店舗名は匿名化済み
+</footer>
+
+</body>
+</html>
